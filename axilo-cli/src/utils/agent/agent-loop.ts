@@ -28,7 +28,6 @@ export type CommandConfirmation = {
   customDenyMessage?: string;
 };
 
-const alreadyProcessedResponses = new Set();
 
 type AgentLoopParams = {
   model: string;
