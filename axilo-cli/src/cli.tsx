@@ -138,15 +138,19 @@ if (cli.flags.help) {
 // ---------------------------------------------------------------------------
 // API key handling
 // ---------------------------------------------------------------------------
+import { apiKeyManager } from "./utils/config";
 
-const apiKey = process.env["KHULNASOFT_API_KEY"];
+// Initialize API key from environment variable if present
+if (process.env["KHULNASOFT_API_KEY"]) {
+  apiKeyManager.setApiKey(process.env["KHULNASOFT_API_KEY"]);
+}
 
-if (!apiKey) {
+if (!apiKeyManager.hasApiKey()) {
   // eslint-disable-next-line no-console
   console.error(
     `\n${chalk.red("Missing KhulnaSoft API key.")}\n\n` +
       `Set the environment variable ${chalk.bold("KHULNASOFT_API_KEY")} ` +
-      `and re-run this command.\n` +
+      `or use the ${chalk.bold("--api-key")} flag to set it.\n` +
       `You can create a key here: ${chalk.bold(
         chalk.underline("https://platform.openai.com/account/api-keys"),
       )}\n`,
@@ -166,10 +170,11 @@ const prompt = cli.input[0];
 const model = cli.flags.model;
 const imagePaths = cli.flags.image as Array<string> | undefined;
 
+// Update config with the model, using apiKeyManager for the API key
 config = {
-  apiKey,
   ...config,
   model: model ?? config.model,
+  // The API key is now managed by apiKeyManager and will be accessed when needed
 };
 
 if (!(await isModelSupportedForResponses(config.model))) {

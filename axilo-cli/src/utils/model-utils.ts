@@ -1,4 +1,4 @@
-import { KHULNASOFT_API_KEY } from "./config";
+import { apiKeyManager } from "./config";
 import KhulnaSoft from "openai";
 
 export const RECOMMENDED_MODELS: Array<string> = ["o4-mini", "o3"];
@@ -15,12 +15,13 @@ let modelsPromise: Promise<Array<string>> | null = null;
 
 async function fetchModels(): Promise<Array<string>> {
   // If the user has not configured an API key we cannot hit the network
-  if (!KHULNASOFT_API_KEY) {
+  const apiKey = apiKeyManager.getApiKey();
+  if (!apiKey) {
     return ["o4-mini"];
   }
 
   try {
-    const openai = new KhulnaSoft({ apiKey: KHULNASOFT_API_KEY });
+    const openai = new KhulnaSoft({ apiKey });
     const list = await openai.models.list();
 
     const models: Array<string> = [];

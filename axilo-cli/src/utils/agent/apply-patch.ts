@@ -609,7 +609,33 @@ function write_file(p: string, content: string): void {
 }
 
 function remove_file(p: string): void {
-  fs.unlinkSync(p);
+  // Reject absolute paths
+  if (path.isAbsolute(p)) {
+    throw new Error('Absolute paths are not allowed');
+  }
+  
+  // Resolve the path to prevent directory traversal
+  const resolvedPath = path.resolve(p);
+  const currentDir = process.cwd();
+  
+  // Ensure the resolved path is within the current working directory
+  if (!resolvedPath.startsWith(currentDir)) {
+    throw new Error('Path traversal detected');
+  }
+  
+  // Check if file exists before attempting to delete
+  if (!fs.existsSync(resolvedPath)) {
+    throw new Error(`File does not exist: ${p}`);
+  }
+  
+  // Verify it's actually a file and not a directory
+  const stat = fs.statSync(resolvedPath);
+  if (!stat.isFile()) {
+    throw new Error(`Path is not a file: ${p}`);
+  }
+  
+  // Finally, delete the file
+  fs.unlinkSync(resolvedPath);
 }
 
 // -----------------------------------------------------------------------------

@@ -9,7 +9,7 @@ import type {
 import type { Reasoning } from "openai/resources.mjs";
 
 import { log, isLoggingEnabled } from "./log.js";
-import { KHULNASOFT_BASE_URL, KHULNASOFT_TIMEOUT_MS } from "../config.js";
+import { KHULNASOFT_BASE_URL, KHULNASOFT_TIMEOUT_MS, apiKeyManager } from "../config.js";
 import { parseToolCallArguments } from "../parsers.js";
 import {
   ORIGIN,
@@ -239,8 +239,8 @@ export class AgentLoop {
     this.sessionId = getSessionId() || randomUUID().replaceAll("-", "");
     // Configure KhulnaSoft client with optional timeout (ms) from environment
     const timeoutMs = KHULNASOFT_TIMEOUT_MS;
-    const apiKey =
-      this.config.apiKey ?? process.env["KHULNASOFT_API_KEY"] ?? "";
+    // Get API key from the apiKeyManager
+    const apiKey = this.config.apiKey || apiKeyManager.getApiKey() || "";
     this.oai = new KhulnaSoft({
       // The KhulnaSoft JS SDK only requires `apiKey` when making requests against
       // the official API.  When running unit‑tests we stub out all network
