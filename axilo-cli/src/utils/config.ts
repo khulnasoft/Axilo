@@ -484,13 +484,15 @@ export const saveConfig = (
 
   const ext = extname(targetPath).toLowerCase();
   if (ext === ".yaml" || ext === ".yml") {
-    writeFileSync(targetPath, dumpYaml({ model: config.model }), "utf-8");
+     const stored: StoredConfig = { model: config.model };
+     if (config.memory) stored.memory = config.memory;
+     if (config.fullAutoErrorMode) stored.fullAutoErrorMode = config.fullAutoErrorMode;
+     writeFileSync(targetPath, dumpYaml(stored), "utf-8");
   } else {
-    writeFileSync(
-      targetPath,
-      JSON.stringify({ model: config.model }, null, 2),
-      "utf-8",
-    );
+    const stored: StoredConfig = { model: config.model };
+     if (config.memory) stored.memory = config.memory;
+     if (config.fullAutoErrorMode) stored.fullAutoErrorMode = config.fullAutoErrorMode;
+     writeFileSync(targetPath, JSON.stringify(stored, null, 2), "utf-8");
   }
 
   writeFileSync(instructionsPath, config.instructions, "utf-8");
