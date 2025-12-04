@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Install commitlint if not present
+if ! command -v commitlint >/dev/null 2>&1; then
+  echo "Installing commitlint..."
+  npm install --save-dev @commitlint/{cli,config-conventional}
+fi
+
+# Lint the commit message
+npx --no-install commitlint --edit "$1"
+
+# Check for WIP commits
+if grep -q -i -w 'WIP\|TODO\|FIXME' "$1"; then
+  echo "Warning: Commit message contains WIP/TODO/FIXME"
+  echo "Are you sure you want to continue? [y/N]"
+  read -r response
+  if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    echo "Commit aborted."
+    exit 1
+  fi
+fi

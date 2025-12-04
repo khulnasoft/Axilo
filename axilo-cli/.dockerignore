@@ -1,0 +1,47 @@
+# Node.js
+node_modules
+npm-debug.log
+package-lock.json
+yarn.lock
+
+# Build output
+/dist
+/coverage
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and debug files
+/test
+/tests
+*.test.js
+*.spec.js
+
+# Git
+.git
+.gitignore
+
+# CI/CD
+.github/
+
+# Documentation
+README.md
+CONTRIBUTING.md
+SECURITY.md
+
+# Local development
+.dockerignore
+Dockerfile
+docker-compose.yml

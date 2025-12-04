@@ -1,0 +1,50 @@
+name: dco
+on: [pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    permissions:
+      contents: read # minimum needed
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # make sure base SHA exists
+
+      - name: Verify Signed‑off‑by lines
+        shell: bash
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          head="${{ github.event.pull_request.head.sha }}"
+
+          unsigned=$(git log --format='%h %s' "$base..$head" | while read sha _; do
+            git show -s --format='%B' "$sha" | grep -qi '^Signed-off-by:' || echo "$sha"
+          done)
+
+          if [ -n "$unsigned" ]; then
+            echo "::error ::❌  DCO check failed."
+            echo "## ❌ DCO Check Failed" >> $GITHUB_STEP_SUMMARY
+            echo ""
+            echo "Commits missing the 'Signed-off-by:' footer:"
+            echo "$unsigned"
+            echo ""
+            echo "🛠 **Quick fix (make ONE signed commit):**"
+            echo "    git fetch origin"
+            echo "    git reset --soft origin/${GITHUB_BASE_REF}"
+            echo "    git commit -s -m \"<your message>\""
+            echo "    git push --force-with-lease"
+            echo ""
+            echo "🔧 **Fix individual commits:**"
+            echo "    git rebase -i origin/${GITHUB_BASE_REF} --exec \"git commit --amend -s --no-edit\""
+            echo "    git push --force-with-lease"
+            echo ""
+            echo "💡  Or edit the commit message in GitHub UI and add:"
+            echo "    Signed-off-by: Your Name <email@example.com>"
+            exit 1
+          else
+            echo "## ✅ DCO Check Passed" >> $GITHUB_STEP_SUMMARY
+            echo "All commits are properly signed off!" >> $GITHUB_STEP_SUMMARY
+          fi

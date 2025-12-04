@@ -1,0 +1,10 @@
+name: "Generate Axilo People"
+description: "Generate the data for the Axilo People page"
+author: "KhulnaSoft DevOps <khulnasoft@gmail.com>"
+inputs:
+  token:
+    description: "User token, to read the GitHub API. Can be passed in using {{ secrets.AXILO_PEOPLE }}"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"

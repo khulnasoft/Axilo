@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "\n🔍 Running pre-push checks..."
+
+# Check if there are any changes that need to be committed
+if ! git diff --quiet; then
+  echo "\n❌ You have unstaged changes. Please commit or stash them first."
+  exit 1
+fi
+
+# Run tests in the workspace
+echo "\n🧪 Running tests..."
+npm test --if-present
+
+if [ $? -ne 0 ]; then
+  echo "\n❌ Tests failed. Please fix them before pushing."
+  exit 1
+fi
+
+echo "\n✅ All checks passed. Pushing changes..."

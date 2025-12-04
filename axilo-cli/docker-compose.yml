@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        - TZ=${TZ:-UTC}
+    container_name: axilo-cli
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    tty: true
+    stdin_open: true
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+
+  # Add additional services like databases here if needed
+  # redis:
+  #   image: redis:alpine
+  #   ports:
+  #     - "6379:6379"

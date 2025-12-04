@@ -1,39 +1,38 @@
 {
   "name": "axilo",
-  "version": "0.1.0",
-  "description": "AI-powered developer assistant and automation platform",
+  "version": "1.0.0",
   "private": true,
-  "type": "module",
+  "description": "Axilo - AI-powered development tools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/axilo.git"
+  },
   "scripts": {
-    "build": "node esbuild.config.js build",
-    "build:dev": "NODE_ENV=development node esbuild.config.js build",
-    "build:prod": "NODE_ENV=production node esbuild.config.js build",
-    "dev": "pnpm --filter 'packages/*' run dev",
-    "test": "pnpm --filter 'packages/*' run test",
-    "lint": "pnpm --filter 'packages/*' run lint",
-    "lint:fix": "pnpm --filter 'packages/*' run lint:fix",
-    "clean": "pnpm --filter 'packages/*' run clean",
-    "integration-test": "pnpm integration-test --workspace=integration-tests"
+    "prepare": "husky",
+    "format": "prettier --check \"**/*.{json,md,yml,yaml,js,ts}\"",
+    "format:fix": "prettier --write \"**/*.{json,md,yml,yaml,js,ts}\"",
+    "validate": "npm run format",
+    "check-updates": "npx npm-check-updates",
+    "update": "npx npm-check-updates -u && npm install"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "esbuild": "^0.25.0",
-    "eslint": "^8.0.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.0.0"
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "npm-check-updates": "^19.1.2",
+    "prettier": "^3.5.3"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
-  "packageManager": "pnpm@8.6.0",
-  "keywords": [
-    "ai",
-    "assistant",
-    "automation",
-    "cli",
-    "developer-tools",
-    "typescript"
-  ],
-  "author": "AXILO",
-  "license": "MIT"
+  "workspaces": [
+    "axilo-cli"
+  ]
 }
