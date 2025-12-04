@@ -64,7 +64,7 @@ ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
 ENV PATH=$PATH:/usr/local/share/npm-global/bin
 
 # Install axilo
-COPY dist/axilo.tgz axilo.tgz
+COPY --from=builder /app/dist/axilo.tgz ./axilo.tgz
 RUN npm install -g axilo.tgz
 
 # Copy and set up firewall script
