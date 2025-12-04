@@ -1,4 +1,4 @@
-name: Axilo People
+name: "Axilo People"
 
 on:
   schedule:
@@ -17,7 +17,7 @@ on:
 # Environment variables available to all jobs and steps in this workflow
 env:
   PYTHON_VERSION: "3.11"
-  DOCKER_IMAGE: ghcr.io/khulnasoft/axilo-people:latest
+  DOCKER_IMAGE: ghcr.io/khulnasoft/axilo:latest
 
 jobs:
   axilo-people:
@@ -80,7 +80,7 @@ jobs:
       - name: Generate People Data
         uses: ./.github/actions/people
         with:
-          token: ${{ secrets.AXILO_PEOPLE }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           dry_run: ${{ github.event.inputs.dry_run || 'false' }}
 
       # Upload coverage report
