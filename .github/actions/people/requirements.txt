@@ -1,11 +1,11 @@
 httpx==0.24.1
 PyGithub==1.59.1
-pydantic==2.0.2
+pydantic==2.4.0
 pydantic-settings==2.0.3
 pyyaml>=5.3.1,<6.0.0
 
 # Testing
-aiohttp==3.8.5
+aiohttp==3.13.3
 pytest==7.4.0
 pytest-asyncio==0.21.1
 pytest-cov==4.1.0
